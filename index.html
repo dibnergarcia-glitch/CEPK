@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>App CEPK — Calculadora de notas</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="Registra tus notas y descubre cuánto necesitas sacar para pasar de año — materia por materia.">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="App CEPK">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/icon-180.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <noscript><div class="noscript">App CEPK necesita JavaScript. / O App CEPK precisa de JavaScript.</div></noscript>
+
+  <header class="top">
+    <div class="brand">
+      <img src="icons/icon.svg" alt="" class="logo">
+      <div>
+        <h1>App CEPK</h1>
+        <p id="subtitle" class="sub"></p>
+      </div>
+    </div>
+    <div class="top-actions">
+      <button id="btnInstall" class="chip hidden" type="button"></button>
+      <button id="btnSettings" class="icon-btn" type="button" aria-label="Ajustes">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section id="summary" class="summary"></section>
+
+    <div class="toolbar">
+      <input id="search" type="search" class="search" autocomplete="off">
+      <select id="sort" class="select"></select>
+    </div>
+
+    <section id="list" class="list"></section>
+    <div id="empty" class="empty hidden"></div>
+    <p id="storageNote" class="storage-note"></p>
+  </main>
+
+  <button id="fab" class="fab" type="button"><span>+</span><b id="fabLabel"></b></button>
+
+  <!-- Hoja: materia -->
+  <dialog id="dlgSubject" class="sheet">
+    <form method="dialog" id="formSubject" novalidate>
+      <div class="sheet-head">
+        <h2 id="subjTitle"></h2>
+        <button type="button" class="icon-btn" data-close aria-label="Cerrar">✕</button>
+      </div>
+      <label class="field"><span id="lblName"></span>
+        <input id="subjName" maxlength="60" required autocomplete="off">
+      </label>
+      <div class="field"><span id="lblColor"></span>
+        <div id="colorRow" class="colors"></div>
+      </div>
+      <div class="field"><span id="lblGrades"></span>
+        <div id="gradeInputs" class="grades"></div>
+      </div>
+      <div id="subjPreview" class="preview"></div>
+      <label class="field"><span id="lblNotes"></span>
+        <textarea id="subjObs" rows="2" maxlength="500"></textarea>
+      </label>
+      <div class="sheet-actions">
+        <button type="button" id="btnDelete" class="btn danger"></button>
+        <span class="grow"></span>
+        <button type="button" class="btn ghost" data-close id="btnCancelSubj"></button>
+        <button type="submit" class="btn primary" id="btnSaveSubj"></button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Hoja: ajustes -->
+  <dialog id="dlgSettings" class="sheet">
+    <form method="dialog" id="formSettings" novalidate>
+      <div class="sheet-head">
+        <h2 id="setTitle"></h2>
+        <button type="button" class="icon-btn" data-close aria-label="Cerrar">✕</button>
+      </div>
+      <div class="grid2">
+        <label class="field"><span id="lblStudent"></span><input id="setStudent" maxlength="60" autocomplete="off"></label>
+        <label class="field"><span id="lblYear"></span><input id="setYear" maxlength="20" autocomplete="off"></label>
+        <label class="field"><span id="lblPeriods"></span>
+          <select id="setPeriods"></select></label>
+        <label class="field"><span id="lblPeriodName"></span>
+          <select id="setPeriodName"></select></label>
+        <label class="field"><span id="lblPass"></span><input id="setPass" inputmode="decimal"></label>
+        <label class="field"><span id="lblMax"></span><input id="setMax" inputmode="decimal"></label>
+        <label class="field"><span id="lblDecimals"></span>
+          <select id="setDecimals"><option value="0">0</option><option value="1">1</option><option value="2">2</option></select></label>
+        <label class="field"><span id="lblLang"></span>
+          <select id="setLang"><option value="es">Español</option><option value="pt">Português</option></select></label>
+      </div>
+      <div class="field"><span id="lblWeights"></span>
+        <div id="weightInputs" class="grades"></div>
+        <small id="hintWeights" class="hint"></small>
+      </div>
+
+      <h3 id="lblStorage" class="sec"></h3>
+      <div id="storageInfo" class="storage-box"></div>
+      <div class="btn-row" id="desktopBtns" hidden>
+        <button type="button" class="btn" id="btnChangeFolder"></button>
+        <button type="button" class="btn" id="btnOpenFolder"></button>
+      </div>
+      <div class="btn-row">
+        <button type="button" class="btn" id="btnExport"></button>
+        <button type="button" class="btn" id="btnImport"></button>
+        <input type="file" id="fileImport" accept="application/json,.json" hidden>
+      </div>
+      <div class="btn-row">
+        <button type="button" class="btn danger" id="btnWipe"></button>
+      </div>
+
+      <div class="sheet-actions">
+        <span class="grow"></span>
+        <button type="button" class="btn ghost" data-close id="btnCancelSet"></button>
+        <button type="submit" class="btn primary" id="btnSaveSet"></button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Confirmación -->
+  <dialog id="dlgConfirm" class="confirm">
+    <form method="dialog">
+      <p id="confirmMsg"></p>
+      <div class="sheet-actions">
+        <span class="grow"></span>
+        <button value="cancel" class="btn ghost" id="confirmNo"></button>
+        <button value="ok" class="btn primary" id="confirmYes"></button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="db.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
